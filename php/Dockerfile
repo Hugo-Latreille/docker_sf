@@ -9,7 +9,7 @@ ARG CACHEBUST=1
 ENV NODE_VERSION=16
 
 RUN apt update \
-    && apt install -y zlib1g-dev g++ git libicu-dev zip libzip-dev zip nano vim \
+    && apt install -y zlib1g-dev g++ git libicu-dev zip libzip-dev zip nano vim fonts-powerline \
     && docker-php-ext-install intl opcache pdo pdo_mysql exif \
     && pecl install apcu \
     && docker-php-ext-enable apcu \
@@ -32,8 +32,14 @@ RUN git config --global user.email "${GIT_USEREMAIL}" \
 RUN curl -sL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - \
     && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+    &&
     && apt-get update \
     && apt-get install -qq -y build-essential nodejs yarn
+
+RUN curl -sL "https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh" | bash
+
+ENV OMB_THEME agnoster
+
 
 COPY php.ini /usr/local/etc/php/php.ini
 COPY .bashrc /root/.bashrc
